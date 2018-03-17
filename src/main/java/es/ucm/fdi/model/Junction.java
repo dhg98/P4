@@ -60,7 +60,7 @@ public class Junction extends SimObject {
 		}
 	}
 	
-	public static class IncomingRoads {
+	protected static class IncomingRoads {
 		private Deque<Vehicle> roadDeque;
 		private Road road;
 		

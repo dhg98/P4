@@ -3,8 +3,6 @@ package es.ucm.fdi.model;
 import java.util.Iterator;
 import java.util.Map;
 
-import es.ucm.fdi.model.Junction.IncomingRoads;
-
 public class RoundRobinJunction extends JunctionWithTimeSlice {
 	
 	private int maxTimeSlice;
@@ -18,26 +16,22 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
 	
 	@Override
 	public void advanceLight() {
-		IncomingRoadWithTimeSlice irs = (IncomingRoadWithTimeSlice)getJunctionDeque().get(getTrafficLight());
-		if(irs.getTimeSlice() == irs.getUsedTimeUnits()) {
-	
-			if(irs.isUsed()) {
-				irs.setTimeSlice(Math.min(maxTimeSlice, irs.getTimeSlice() + 1));
-			} else if(irs.getNumVehicles() == 0) {
-				irs.setTimeSlice(Math.max(minTimeSlice, irs.getTimeSlice() - 1));
-			}
-			
-			irs.setUsedTimeUnits(0);	
-			
-			try {	
-				setTrafficLight((getTrafficLight() + 1) % getJunctionDeque().size());
-			} catch (ArithmeticException e) {
-				setTrafficLight(0); //Desde donde se realiza esta llamada esta excepcion no se va a dar nunca, porque se comprueba que junctionDeque.size() != 0.
-			}
+		if (getJunctionDeque() == null) {
+			super.advanceLight();
 		} else {
-			irs.setUsedTimeUnits(irs.getUsedTimeUnits()+ 1);
+			IncomingRoadWithTimeSlice irs = (IncomingRoadWithTimeSlice)getJunctionDeque().get(getTrafficLight());
+			if(irs.getTimeSlice() - 1 == irs.getUsedTimeUnits()) {
+				if(irs.isUsed()) {
+					irs.setTimeSlice(Math.min(maxTimeSlice, irs.getTimeSlice() + 1));
+				} else if (irs.getNumVehicles() == 0) {
+					irs.setTimeSlice(Math.max(minTimeSlice, irs.getTimeSlice() - 1));
+				}
+				irs.setUsedTimeUnits(0);	
+				super.advanceLight();
+			} else {
+				irs.setUsedTimeUnits(irs.getUsedTimeUnits()+ 1);
+			}
 		}
-		
 	}
 	
 	/**

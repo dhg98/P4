@@ -9,7 +9,7 @@ public class JunctionWithTimeSlice extends Junction {
 		super(id);
 	}
 
-	public static class IncomingRoadWithTimeSlice extends IncomingRoads {
+	protected static class IncomingRoadWithTimeSlice extends Junction.IncomingRoads {
 		
 		private int timeSlice;
 		private int usedTimeUnits;

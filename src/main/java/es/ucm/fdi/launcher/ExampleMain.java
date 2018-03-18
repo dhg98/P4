@@ -165,7 +165,7 @@ public class ExampleMain {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		test(_inFile, _outFile, "15_misc.ini.eout", 10);
+		//test(_inFile, _outFile, "14_misc.ini.eout", 10);
 		//test(_inFile, _outFile, "09_crossRoadTwoVehicles.ini.eout", 10);
 	}
 
@@ -193,10 +193,11 @@ public class ExampleMain {
 
 		// Call test in order to test the simulator on all examples in a directory.
 		//
-	    //	test("resources/examples/events/basic");
-
+	   
+		test("C:\\Users\\Usuario\\git\\P4");
 		// Call start to start the simulator from command line, etc.
 		start(args);
+		
 
 	}
 

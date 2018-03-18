@@ -33,7 +33,19 @@ public class MostCrowdedJunction extends JunctionWithTimeSlice {
 		} else {
 			irs.setUsedTimeUnits(irs.getUsedTimeUnits() + 1);
 		}
-		
+	}
+	
+	public void avanza() {
+		if(!getJunctionDeque().isEmpty()) {
+			if (!getJunctionDeque().get(getTrafficLight()).getRoadDeque().isEmpty()) {
+				//el array de incomingRoads no este vacio y la cola que indica el semaforo tampoco
+				IncomingRoadWithTimeSlice irs = (IncomingRoadWithTimeSlice)getJunctionDeque().get(getTrafficLight());
+				irs.getRoadDeque().getFirst().moverASiguienteCarretera(); //movemos el vehiculo a la carretera en funcion de su itinerario
+				irs.getRoadDeque().removeFirst(); //eliminar vehiculo de la cola
+				irs.setNumVehicles(irs.getNumVehicles() + 1);
+			}
+			advanceLight();
+		}
 	}
 	
 	/**

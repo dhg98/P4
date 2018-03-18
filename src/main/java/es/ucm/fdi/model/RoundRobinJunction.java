@@ -14,6 +14,19 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
 		this.minTimeSlice = minTimeSlice;
 	}
 	
+	public void avanza() {
+		if(!getJunctionDeque().isEmpty()) {
+			if (!getJunctionDeque().get(getTrafficLight()).getRoadDeque().isEmpty()) {
+				//el array de incomingRoads no este vacio y la cola que indica el semaforo tampoco
+				IncomingRoadWithTimeSlice irs = (IncomingRoadWithTimeSlice)getJunctionDeque().get(getTrafficLight());
+				irs.getRoadDeque().getFirst().moverASiguienteCarretera(); //movemos el vehiculo a la carretera en funcion de su itinerario
+				irs.getRoadDeque().removeFirst(); //eliminar vehiculo de la cola
+				irs.setNumVehicles(irs.getNumVehicles() + 1);
+			}
+			advanceLight();
+		}
+	}
+	
 	@Override
 	public void advanceLight() {
 		if (getJunctionDeque() == null) {
@@ -29,7 +42,7 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
 				irs.setUsedTimeUnits(0);	
 				super.advanceLight();
 			} else {
-				irs.setUsedTimeUnits(irs.getUsedTimeUnits()+ 1);
+				irs.setUsedTimeUnits(irs.getUsedTimeUnits() + 1);
 			}
 		}
 	}

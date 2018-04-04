@@ -157,7 +157,7 @@ public class ExampleMain {
 		try {
 			c.run();
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("While parsing " + _inFile, e);
 		}
 	}
 

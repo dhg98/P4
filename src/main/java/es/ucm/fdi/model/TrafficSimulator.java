@@ -44,13 +44,12 @@ public class TrafficSimulator {
 	 * @throws IOException
 	 */
 	public void execute(OutputStream out, int pasosSimulacion) throws IOException{
-		Map <String, String> report = new LinkedHashMap<>();
 		int limiteTiempo = timeCounter + pasosSimulacion - 1;
 		while (timeCounter <= limiteTiempo) {
 			eventProcess();
 			advance();
 			++timeCounter;
-			writeReport(report, out);
+			writeReport(out);
 		}
 	}
 	
@@ -107,30 +106,31 @@ public class TrafficSimulator {
 		}
 		return ini;
 	}
-	
+
+	/**
+	 * Append reports for each object to main report
+	 * @param objects
+	 * @param report
+	 */
+	private void fillReport(Iterable<? extends SimObject> objects, Ini report) {
+		Map<String, String> objectReport = new LinkedHashMap<>();
+		for (SimObject o : objects) {
+			o.report(timeCounter, objectReport);
+			report.addsection(createIniSection(objectReport));
+			objectReport.clear();
+		}
+	}
+
 	/**
 	 * Writes a report in a OutputStream. The order is Junctions, then Roads and at last Vehicles.
-	 * @param report
 	 * @param out
 	 * @throws IOException
 	 */
-	public void writeReport(Map<String, String> report, OutputStream out) throws IOException {
+	public void writeReport(OutputStream out) throws IOException {
 		Ini file = new Ini();
-		for (Junction j : r.getJunctions()) {
-			j.report(timeCounter, report);
-			file.addsection(createIniSection(report));
-			report.clear(); //Al estar reutilizando el mismo mapa es necesario eliminar todas las claves antes de sobreescribir.
-		}
-		for (Road ro: r.getRoads()) {
-			ro.report(timeCounter, report);
-			file.addsection(createIniSection(report));
-			report.clear(); 
-		}
-		for (Vehicle v: r.getVehicles()) {
-			v.report(timeCounter, report);
-			file.addsection(createIniSection(report));
-			report.clear(); 
-		}
+		fillReport(r.getJunctions(), file);
+		fillReport(r.getRoads(), file);
+		fillReport(r.getVehicles(), file);
 		file.store(out);
 	}
 }
